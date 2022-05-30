@@ -1,0 +1,6 @@
+.vscode/
+agent/.vscode/
+dashboard/.vscodde/
+dashboard/bin/
+dashboard/obj/
+.git/
