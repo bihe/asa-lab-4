@@ -29,7 +29,7 @@ build-agent-arm: ## build the container-image for the agent using arm64
 	@echo "  >  Building the container-image for the agent"
 	docker build --build-arg buildtime_variable_arch=arm64 -t agent ./agent
 
-build_dashboard: ## build the container-image for the dashboard
+build-dashboard: ## build the container-image for the dashboard
 	@echo "  >  Building the container-image for the dashboard"
 	docker build -t dashboard ./dashboard
 
