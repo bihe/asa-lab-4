@@ -28,7 +28,7 @@ The first step is to initialize dapr. As a result dapr itself and the correspond
 # kick-start dapr
 dapr init
 
-# check the versiion
+# check the version
 dapr --version
 CLI version: 1.7.1
 Runtime version: 1.7.3
@@ -198,4 +198,50 @@ The result can be verified by listing the component via `kubectl`:
 > kubectl get components
 NAME     AGE
 pubsub   2d23h
+```
+
+4. deploy components and service
+
+```bash
+minikube tunnel
+```
+
+
+
+## Local images
+The application images are not published to dockerhub or any other container-registry, because this would just be waste for this demo-purpose. Instead the images are held locally and k8s is instructed to **not pull** the images!
+
+To build locally a Makefile is available:
+
+```bash
+# unix-like
+make build-container
+
+# windows
+.\docker-build.ps1
+```
+creates the local images.
+
+
+```yaml
+containers:
+- name: dashboard
+  image: dapr-demo/dashboard:latest
+  ports:
+  - containerPort: 9000
+  imagePullPolicy: Never
+```
+
+The important part is the **imagePullPolicy**. To actually enable this, it is not sufficient to just build the images locally, because minikube does not access those local images. As usual there is an [StackOverflow answer](https://stackoverflow.com/questions/56392041/getting-errimageneverpull-in-pods) how to give the images to minikube!
+
+The trick is to set some relevant ENVs via minikube and build again:
+
+```
+eval $(minikube docker-env)
+```
+
+On __Windows__ and __powershell__ this translates to
+
+```
+minikube docker-env --shell powershell | Invoke-Expression
 ```

@@ -1,2 +1,2 @@
-docker build -t agent ./agent
-docker build -t dashboard ./dashboard
+docker build -t dapr-demo/agent ./agent
+docker build -t dapr-demo/dashboard ./dashboard

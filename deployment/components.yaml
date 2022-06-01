@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent
+  labels:
+    app: agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent
+  template:
+    metadata:
+      labels:
+        app: agent
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "agent"
+    spec:
+      containers:
+      - name: agent
+        image: dapr-demo/agent:latest
+        imagePullPolicy: Never
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  labels:
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "dashboard"
+        dapr.io/app-port: "9000"
+    spec:
+      containers:
+      - name: dashboard
+        image: dapr-demo/dashboard:latest
+        ports:
+        - containerPort: 9000
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+  labels:
+    app: dashboard-service
+spec:
+  selector:
+    app: dashboard
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000
+  type: LoadBalancer

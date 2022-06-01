@@ -9,7 +9,7 @@ WHITE  := $(shell tput -Txterm setaf 7)
 CYAN   := $(shell tput -Txterm setaf 6)
 RESET  := $(shell tput -Txterm sgr0)
 
-.PHONY: all agent-cli dashboard-cli build-agent build-agent-arm build-dashboard build-dashboard-arm check-run-dashboard
+.PHONY: all agent-cli dashboard-cli build-container build-container-arm check-run-dashboard kube-deploy
 
 all: help
 
@@ -21,25 +21,19 @@ dashboard-cli: ## run dashboard via dapr-cli
 	@echo "  >  Run the dashboard via dapr-cli ..."
 	dapr run --app-id dashboard --app-port 9000 --components-path ~/.dapr/components -- dotnet run --project ./dashboard/dashboard.csproj
 
-build-agent: ## build the container-image for the agent
-	@echo "  >  Building the container-image for the agent"
-	docker build -t agent ./agent
+build-container: ## build the container-images
+	@echo "  >  Building the container-image"
+	docker build -t dapr-demo/agent ./agent
+	docker build -t dapr-demo/dashboard ./dashboard
 
-build-agent-arm: ## build the container-image for the agent using arm64
-	@echo "  >  Building the container-image for the agent"
-	docker build --build-arg buildtime_variable_arch=arm64 -t agent ./agent
-
-build-dashboard: ## build the container-image for the dashboard
-	@echo "  >  Building the container-image for the dashboard"
-	docker build -t dashboard ./dashboard
-
-build-dashboard-arm: ## build the container-image for the dashboard using arm64
-	@echo "  >  Building the container-image for the dashboard"
-	docker build --build-arg buildtime_variable_arch=alpine-arm64 -t dashboard ./dashboard
+build-container-arm: ## build the container-images using arm64
+	@echo "  >  Building the container-images"
+	docker build --build-arg buildtime_variable_arch=arm64 -t dapr-demo/agent ./agent
+	docker build --build-arg buildtime_variable_arch=alpine-arm64 -t dapr-demo/dashboard ./dashboard
 
 check-run-dashboard: ## run the container-image for the dashboard to check if the build works
 	@echo "  >  Starting the container-image for the dashboard"
-	docker run -it -p 9000:9000 dashboard
+	docker run -it -p 9000:9000 dapr-demo/dashboard
 
 kube-deploy: ## deploy the necessary dapr components to kubernetes
 	@echo " >  Deploy dapr components"
