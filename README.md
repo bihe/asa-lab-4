@@ -262,7 +262,7 @@ kubectl logs -f --selector app=agent -c agent
 kubectl logs -f --selector app=dashboard -c dashboard
 ```
 
-The `selector` and/or `container` need to be specified, because of the dapr sidecar architecture. The deployed pod contains two containers. The application container and the dapr sidecar.
+The `selector` and/or `container` need to be specified, because of the dapr [sidecar pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/sidecar). The deployed pod contains two containers. The application container and the dapr sidecar.
 
 ```bash
 > kubectl logs -f dashboard-<random>-<id>
