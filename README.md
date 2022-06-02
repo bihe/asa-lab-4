@@ -1,6 +1,15 @@
 # Adaptive Architecture with dapr
 
-Intro to dapr - https://docs.dapr.io/concepts/overview/
+![dapr-loge](./.images/dapr.png)
+
+Dapr is a portable, event-driven runtime that makes it easy for any 
+developer to build resilient, stateless and stateful applications that run on the cloud and edge and embraces the diversity of languages and 
+developer frameworks.
+
+Dapr codifies the best practices for building microservice applications into open, independent, building blocks that enable you to build portable applications with the language and framework of your choice. 
+
+https://docs.dapr.io/concepts/overview/
+
 
 # Setup
 The following components are necessary to run the example.
