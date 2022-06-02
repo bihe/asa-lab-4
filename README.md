@@ -215,10 +215,56 @@ pubsub   2d23h
 
 4. deploy components and service
 
+To deploy the logic as containers to k8s/minikube another yaml definition is needed. The yaml files creates deployments for two pods and a service to access the dashboard (via ingress). The syntax is typical k8s-yaml (https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/) with some dapr-extensions:
+
+```yaml
+annotations:
+    dapr.io/enabled: "true"
+    dapr.io/app-id: "dashboard"
+    dapr.io/app-port: "9000"
+spec:
+    containers:
+    - name: dashboard
+      image: dapr-demo/dashboard:latest
+      ports:
+      - containerPort: 9000
+      imagePullPolicy: Never
+```
+
+The `app-port` and `containerPort` are kind of used twice, just ensure that the same ports are used. The deployment file is available at: `deployment/components.yaml` and is applied via
+
+```bash
+kubectl -f apply ./deployment/components.yaml
+```
+
+To access the dashboard a k8s service is defined: 
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+  labels:
+    app: dashboard-service
+spec:
+  selector:
+    app: dashboard
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000
+  type: LoadBalancer
+```
+
+The service definition exposes a TCP port which binds/forwars to the node and port of the container. This is necessary to access the system and the logic within the container from the "outside".
+
+Minikube has a speciality, that additional work is needed to access services, because no "public IP" is created with minikube (this is different with other k8s implementations). But there is an easy way to access the service - minikube has a `tunnel` command which establishes a tunnel to the exposed service. In fact it creates a tunnel to the LoadBalancer where services are exposed (https://minikube.sigs.k8s.io/docs/commands/tunnel/)
+
 ```bash
 minikube tunnel
 ```
 
+The terminal-window with the `tunnel` command needs to stay opened, this enables access to the defined port on **localhost**. So if a browser-window is opened (http://localhost:9000) the dashboard HTML/SignalR UI is displayed.
 
 
 ## Local images
