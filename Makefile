@@ -40,11 +40,11 @@ kube-deploy-pubsub: ## deploy the necessary dapr pubsub components
 	kubectl apply -f ./deployment/pubsub.yaml
 
 kube-deploy-components: ## deploy the components and services
-	@echo " >  Deploy dapr application components
+	@echo " >  Deploy dapr application components"
 	kubectl apply -f ./deployment/components.yaml
 
 kube-undeploy: ## remove the k8s components for a fresh start
-	@echo " >  Undeploy components for a fresh start
+	@echo " >  Undeploy components for a fresh start"
 	kubectl delete deployment agent
 	kubectl delete deployment dashboard
 	kubectl delete service dashboard-service

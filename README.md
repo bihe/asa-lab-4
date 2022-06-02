@@ -356,3 +356,19 @@ minikube docker-env --shell powershell | Invoke-Expression
 ## Cleanup
 
 By executing the powershell script `k8s-undeploy.ps1` or `make kube-undeploy` the resources are removed from k8s and a fresh start can be done.
+
+This can be verified by checking the pods:
+
+```bash
+> kubectl get pods
+NAME                         READY   STATUS        RESTARTS        AGE
+agent-666d89fb8f-mg5wh       2/2     Terminating   1 (3m34s ago)   3m35s
+dashboard-5bd6c7697f-ztbx5   2/2     Terminating   0               3m35s
+redis-master-0               1/1     Running       2 (22h ago)     3d23h
+redis-replicas-0             1/1     Running       3 (5m16s ago)   3d23h
+redis-replicas-1             1/1     Running       3 (5m16s ago)   3d23h
+redis-replicas-2             1/1     Running       3 (5m16s ago)   3d23h
+
+```
+
+The output shows, that the application pods are in the process of being removed from k8s.
