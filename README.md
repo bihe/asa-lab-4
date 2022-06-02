@@ -51,7 +51,7 @@ To simplify this process open two terminal windows and execute the following mak
 
 ```bash
 # terminal1
-mage agent-cli
+make agent-cli
 
 # terminal2
 make dashboard-cli
