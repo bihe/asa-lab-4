@@ -38,6 +38,7 @@ check-run-dashboard: ## run the container-image for the dashboard to check if th
 kube-deploy: ## deploy the necessary dapr components to kubernetes
 	@echo " >  Deploy dapr components"
 	kubectl apply -f ./deployment/pubsub.yaml
+	kubectl apply -f ./deployment/components.yaml
 
 # internal tasks
 
