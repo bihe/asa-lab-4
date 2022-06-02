@@ -2,11 +2,11 @@
 
 ![dapr-loge](./.images/dapr.png)
 
-Dapr is a portable, event-driven runtime that makes it easy for any 
-developer to build resilient, stateless and stateful applications that run on the cloud and edge and embraces the diversity of languages and 
+Dapr is a portable, event-driven runtime that makes it easy for any
+developer to build resilient, stateless and stateful applications that run on the cloud and edge and embraces the diversity of languages and
 developer frameworks.
 
-Dapr codifies the best practices for building microservice applications into open, independent, building blocks that enable you to build portable applications with the language and framework of your choice. 
+Dapr codifies the best practices for building microservice applications into open, independent, building blocks that enable you to build portable applications with the language and framework of your choice.
 
 https://docs.dapr.io/concepts/overview/
 
@@ -122,7 +122,7 @@ brew install kubectl
 scoop install kubectl
 ```
 
-This is optional, because the minikube-provided kubectl can also be used, or aliased to "feel" like a standalone kubectl (https://minikube.sigs.k8s.io/docs/handbook/kubectl/). 
+This is optional, because the minikube-provided kubectl can also be used, or aliased to "feel" like a standalone kubectl (https://minikube.sigs.k8s.io/docs/handbook/kubectl/).
 
 
 2. dapr on k8s
@@ -205,7 +205,7 @@ kubectl apply -f ./deployment/pubsub.yaml
 Again this can be done by using the Makefile:
 
 ```bash
-make kube-deploy
+make kube-deploy-pubsub
 ```
 
 Or for the Windows-people by using the following powershell script:
@@ -244,9 +244,46 @@ The `app-port` and `containerPort` are kind of used twice, just ensure that the 
 
 ```bash
 kubectl -f apply ./deployment/components.yaml
+
+# unix-like
+make kube-deploy-components
+
+# windows
+.\k8s-deploy-components.ps1
 ```
 
-To access the dashboard a k8s service is defined: 
+The logs on the containers within the pods (stdout) can be shown via kubectl:
+
+```bash
+# show the agent output
+kubectl logs -f --selector app=agent -c agent
+
+# show the output of the dashboard
+kubectl logs -f --selector app=dashboard -c dashboard
+```
+
+The `selector` and/or `container` need to be specified, because of the dapr sidecar architecture. The deployed pod contains two containers. The application container and the dapr sidecar.
+
+```bash
+> kubectl logs -f dashboard-<random>-<id>
+error: a container name must be specified for pod dashboard-<random>-<id>, choose one of: [dashboard daprd]
+```
+
+The log-output of the dapr sidecar can also be shown:
+
+```bash
+> kubectl logs -f dashboard-<random>-<id> -c daprd
+time="2022-06-02T17:01:19.962046863Z" level=info msg="starting Dapr Runtime -- version 1.7.4 -- commit 9b3512921bb52af190a2474f3d31f39a1a7a9879" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.runtime type=log ver=1.7.4
+time="2022-06-02T17:01:19.962091072Z" level=info msg="log level set to: info" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.runtime type=log ver=1.7.4
+time="2022-06-02T17:01:19.962208472Z" level=info msg="metrics server started on :9090/" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.metrics type=log ver=1.7.4
+time="2022-06-02T17:01:19.962333421Z" level=info msg="loading default configuration" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.runtime type=log ver=1.7.4
+time="2022-06-02T17:01:19.962372471Z" level=info msg="kubernetes mode configured" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.runtime type=log ver=1.7.4
+time="2022-06-02T17:01:19.962380871Z" level=info msg="app id: dashboard" app_id=dashboard instance=dashboard-<random>-<id> scope=dapr.runtime type=log ver=1.7.4
+
+```
+
+
+To access the dashboard a k8s service is defined:
 
 ```yaml
 apiVersion: v1
@@ -274,6 +311,8 @@ minikube tunnel
 ```
 
 The terminal-window with the `tunnel` command needs to stay opened, this enables access to the defined port on **localhost**. So if a browser-window is opened (http://localhost:9000) the dashboard HTML/SignalR UI is displayed.
+
+![k8s deployment works](./.images/k8s_deployment.png)
 
 
 ## Local images
@@ -313,3 +352,7 @@ On __Windows__ and __powershell__ this translates to
 ```
 minikube docker-env --shell powershell | Invoke-Expression
 ```
+
+## Cleanup
+
+By executing the powershell script `k8s-undeploy.ps1` or `make kube-undeploy` the resources are removed from k8s and a fresh start can be done.

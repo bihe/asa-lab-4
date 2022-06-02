@@ -9,7 +9,7 @@ WHITE  := $(shell tput -Txterm setaf 7)
 CYAN   := $(shell tput -Txterm setaf 6)
 RESET  := $(shell tput -Txterm sgr0)
 
-.PHONY: all agent-cli dashboard-cli build-container build-container-arm check-run-dashboard kube-deploy
+.PHONY: all agent-cli dashboard-cli build-container build-container-arm check-run-dashboard kube-deploy-pubsub kube-deploy-components kube-undeploy
 
 all: help
 
@@ -35,10 +35,21 @@ check-run-dashboard: ## run the container-image for the dashboard to check if th
 	@echo "  >  Starting the container-image for the dashboard"
 	docker run -it -p 9000:9000 dapr-demo/dashboard
 
-kube-deploy: ## deploy the necessary dapr components to kubernetes
-	@echo " >  Deploy dapr components"
+kube-deploy-pubsub: ## deploy the necessary dapr pubsub components
+	@echo " >  Deploy dapr pubsub components"
 	kubectl apply -f ./deployment/pubsub.yaml
+
+kube-deploy-components: ## deploy the components and services
+	@echo " >  Deploy dapr application components
 	kubectl apply -f ./deployment/components.yaml
+
+kube-undeploy: ## remove the k8s components for a fresh start
+	@echo " >  Undeploy components for a fresh start
+	kubectl delete deployment agent
+	kubectl delete deployment dashboard
+	kubectl delete service dashboard-service
+	kubectl delete component pubsub
+
 
 # internal tasks
 
