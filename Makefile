@@ -23,11 +23,13 @@ dashboard-cli: ## run dashboard via dapr-cli
 
 build-container: ## build the container-images
 	@echo "  >  Building the container-image"
+	eval $(minikube docker-env)
 	docker build -t dapr-demo/agent ./agent
 	docker build -t dapr-demo/dashboard ./dashboard
 
 build-container-arm: ## build the container-images using arm64
 	@echo "  >  Building the container-images"
+	eval $(minikube docker-env)
 	docker build --build-arg buildtime_variable_arch=arm64 -t dapr-demo/agent ./agent
 	docker build --build-arg buildtime_variable_arch=alpine-arm64 -t dapr-demo/dashboard ./dashboard
 

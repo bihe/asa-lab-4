@@ -2,11 +2,11 @@
 
 ![dapr-loge](./.images/dapr.png)
 
-Dapr is a portable, event-driven runtime that makes it easy for any
+**Dapr** is a portable, event-driven runtime that makes it easy for any
 developer to build resilient, stateless and stateful applications that run on the cloud and edge and embraces the diversity of languages and
 developer frameworks.
 
-Dapr codifies the best practices for building microservice applications into open, independent, building blocks that enable you to build portable applications with the language and framework of your choice.
+**Dapr** codifies the best practices for building microservice applications into open, independent, building blocks that enable you to build portable applications with the language and framework of your choice.
 
 https://docs.dapr.io/concepts/overview/
 
@@ -27,9 +27,15 @@ The following components are optional, are only needed if the example is run via
 **NOTE**: For windows users it is quite helpful to set the execution-policy for powershell:
 
 ```bash
-Set-ExecutionPolicy -ExecutionPolicy AllSigned -Scope CurrentUser
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
+**NOTE**: Windows users should use a package manager to simplify installation. Scoop or Chocolaty are excellent choices.
+
+```bash
+## install scoop
+irm get.scoop.sh | iex
+```
 
 # dapr cli
 The installation is straight-forward, just follow the instructions mentioned above.
@@ -51,6 +57,8 @@ Runtime version: 1.7.3
 ```
 
 After the initial dapr setup the example can be executed using the `dapr-cli`. A prerequisite for this step is the installation of the golang/.NET SDKs (again see above for the installation link/info).
+
+
 
 1. Via Makefile (Unix-like systems)
 
@@ -86,7 +94,7 @@ The output will be similar to this:
 
 ![dapr-cli-output](./.images/dapr_cli_output.png)
 
-# dapr on k8s
+# dapr on k8s (no local development SDKs needed)
 
 The easiest way to work with kubernetes/k8s is to locally install minikube, a single-node kubernetes "cluster". The installation is again rather simple and can be easily performed on Windows, Mac, Linux.
 
@@ -266,7 +274,7 @@ spec:
 The `app-port` and `containerPort` are kind of used twice, just ensure that the same ports are used. The deployment file is available at: `deployment/components.yaml` and is applied via
 
 ```bash
-kubectl -f apply ./deployment/components.yaml
+kubectl apply -f ./deployment/components.yaml
 
 # unix-like
 make kube-deploy-components
