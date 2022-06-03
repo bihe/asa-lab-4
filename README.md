@@ -24,6 +24,13 @@ The following components are optional, are only needed if the example is run via
 - The programming language with the nice mascot **golang**: https://go.dev/dl/
 - The versatile technology from Microsoft **.NET**: https://dotnet.microsoft.com/en-us/download
 
+**NOTE**: For windows users it is quite helpful to set the execution-policy for powershell:
+
+```bash
+Set-ExecutionPolicy -ExecutionPolicy AllSigned -Scope CurrentUser
+```
+
+
 # dapr cli
 The installation is straight-forward, just follow the instructions mentioned above.
 
@@ -224,6 +231,22 @@ pubsub   2d23h
 
 4. deploy components and service
 
+**NOTE**: We need to **build the container-images** before we can deploy the application components. The process is described in the section **Build local images**.
+
+**TL;DR**
+
+```bash
+# unix-like
+## we need to tell docker where the images are stored - this is necessary for minikube to find the images used in the pods
+eval $(minikube docker-env)
+make build-container
+
+# windows
+## set docker-env variables to "redirect" the images towards minikube
+minikube docker-env --shell powershell | Invoke-Expression
+.\docker-build.ps1
+```
+
 To deploy the logic as containers to k8s/minikube another yaml definition is needed. The yaml files creates deployments for two pods and a service to access the dashboard (via ingress). The syntax is typical k8s-yaml (https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/) with some dapr-extensions:
 
 ```yaml
@@ -315,7 +338,7 @@ The terminal-window with the `tunnel` command needs to stay opened, this enables
 ![k8s deployment works](./.images/k8s_deployment.png)
 
 
-## Local images
+## Build local images
 The application images are not published to dockerhub or any other container-registry, because this would just be waste for this demo-purpose. Instead the images are held locally and k8s is instructed to **not pull** the images!
 
 To build locally a Makefile is available:
