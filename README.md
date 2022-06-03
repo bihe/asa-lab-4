@@ -249,6 +249,10 @@ pubsub   2d23h
 eval $(minikube docker-env)
 make build-container
 
+## note for M1 Mac Users
+## the Makefile provides a target which sets the correct architecture for M1 Macs
+make build-container-arm
+
 # windows
 ## set docker-env variables to "redirect" the images towards minikube
 minikube docker-env --shell powershell | Invoke-Expression
