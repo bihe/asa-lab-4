@@ -56,9 +56,9 @@ CLI version: 1.7.1
 Runtime version: 1.7.3
 ```
 
-After the initial dapr setup the example can be executed using the `dapr-cli`. A prerequisite for this step is the installation of the golang/.NET SDKs (again see above for the installation link/info).
+With this output the `dapr-cli` setup is done.
 
-
+After the initial dapr setup the example can be executed using the `dapr-cli`. This is only relevant/necessary when local development and dev-sdks are available. A prerequisite for this step is the installation of the golang/.NET SDKs (again see above for the installation link/info).
 
 1. Via Makefile (Unix-like systems)
 
