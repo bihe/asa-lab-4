@@ -165,8 +165,19 @@ A pubsub component is needed on k8s/minikube for this example. The easiest way i
 3.1 Install helm-cli
 
 The helm-documentation lists a number of options how to install helm for different operating-systems: https://helm.sh/docs/intro/install/
+Again the easiest way is to use a package manager:
+
+```bash
+# Mac
+brew install helm
+
+# Windows
+scoop install helm
+```
 
 3.2 Install redis
+
+To install redis on k8s/minikube we use helm (=the kubernetes package manager). This is similar to `apt` for Debian-based Linux systems (https://wiki.debian.org/AptCLI)
 
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
