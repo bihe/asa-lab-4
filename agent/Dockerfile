@@ -2,14 +2,14 @@
 ## --------------------------------------------------------------------------
 FROM golang:alpine AS build-env
 
-ARG buildtime_variable_arch=amd64
-ENV ARCH=${buildtime_variable_arch}
+ARG golang_arch=amd64
+ENV goarch=${golang_arch}
 
 WORKDIR /build-env
 COPY ./go.mod ./
 COPY ./main.go ./
 
-RUN GOOS=linux GOARCH=${ARCH} go build -ldflags="-w -s" -o agent ./main.go
+RUN GOOS=linux GOARCH=${goarch} go build -ldflags="-w -s" -o agent ./main.go
 ## --------------------------------------------------------------------------
 
 ## runtime

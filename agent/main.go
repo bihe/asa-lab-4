@@ -13,19 +13,24 @@ import (
 )
 
 // notification defines the data-structure sent by the agent
-// the agent is identified by the MAC-address of the host
+// the agent is identified by the Hostname/MAC address of the host
 type notification struct {
+	Host   string `json:"host,omitempty"`
 	Mac    string `json:"mac,omitempty"`
 	Tstamp string `json:"timestamp,omitempty"`
 	Val    string `json:"value,omitempty"`
 }
 
 func (n notification) String() string {
-	return fmt.Sprintf("MAC: %s, VAL: %s, TSTAMP: %s", n.Mac, n.Val, n.Tstamp)
+	return fmt.Sprintf("Host: %s, Mac: %s, Val: %s, Tstamp: %s", n.Host, n.Mac, n.Val, n.Tstamp)
 }
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
+	var (
+		maxWaitSec int = 10
+		minWaitSec int = 1
+	)
 
 	// the relevant values to configure the agent are supplied via Env-Vars.
 	// if no specific Env-Vars are available sensible standards/defaults are used
@@ -43,9 +48,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+
 	for {
+		randWait := rand.Intn(maxWaitSec-minWaitSec) + minWaitSec
+
 		// create the notification payload by using the MAC address, current timestamp and a random value
 		notify := notification{
+			Host:   hostname,
 			Mac:    macs[0],
 			Tstamp: time.Now().Format(time.RFC3339),
 			Val:    randString(16),
@@ -76,7 +90,7 @@ func main() {
 		}
 		fmt.Printf("got result: %s\n", res.Status)
 
-		time.Sleep(5 * time.Second)
+		time.Sleep(time.Duration(randWait) * time.Second)
 	}
 
 }

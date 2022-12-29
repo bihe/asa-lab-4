@@ -2,13 +2,13 @@
 ## --------------------------------------------------------------------------
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 
-ARG buildtime_variable_arch=alpine-x64
-ENV ARCH=${buildtime_variable_arch}
+ARG dotnet_runtime_arch=alpine-x64
+ENV runtime_arch=${dotnet_runtime_arch}
 
 WORKDIR /build-env
 COPY . ./
 
-RUN dotnet publish -c Release --self-contained --runtime ${ARCH} -o ./dist "dashboard.csproj"
+RUN dotnet publish -c Release --self-contained --runtime ${runtime_arch} -o ./dist "dashboard.csproj"
 
 ## runtime
 ## --------------------------------------------------------------------------
@@ -45,8 +45,6 @@ WORKDIR /opt/dashboard
 RUN mkdir -p /opt/dashboard
 COPY --from=build-env /build-env/dist /opt/dashboard
 RUN chown -R dashboard:dashboard /opt/dashboard
-
-RUN ls -l /opt/dashboard
 
 USER dashboard
 EXPOSE 9000
