@@ -1,54 +1,92 @@
+# agent implemented with golang
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agent
+  name: agent-golang
   labels:
-    app: agent
+    app: agent-golang
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: agent
+      app: agent-golang
   template:
     metadata:
       labels:
-        app: agent
+        app: agent-golang
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "agent"
+        dapr.io/app-id: "agent-golang"
     spec:
       containers:
-      - name: agent
-        image: dapr-demo/agent:latest
+      - name: agent-golang
+        image: dapr-demo/agent-golang:latest
         imagePullPolicy: Never
+
 ---
+
+# gent implemented with python
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dashboard
+  name: agent-python
   labels:
-    app: dashboard
+    app: agent-python
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agent-python
+  template:
+    metadata:
+      labels:
+        app: agent-python
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "agent-python"
+    spec:
+      containers:
+      - name: agent-python
+        image: dapr-demo/agent-python:latest
+        imagePullPolicy: Never
+
+---
+
+# the dotnet-based dashboard which "receives" messages from the pubsub-component
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-dotnet
+  labels:
+    app: dashboard-dotnet
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dashboard
+      app: dashboard-dotnet
   template:
     metadata:
       labels:
-        app: dashboard
+        app: dashboard-dotnet
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "dashboard"
+        dapr.io/app-id: "dashboard-dotnet"
         dapr.io/app-port: "9000"
     spec:
       containers:
-      - name: dashboard
-        image: dapr-demo/dashboard:latest
+      - name: dashboard-dotnet
+        image: dapr-demo/dashboard-dotnet:latest
         ports:
         - containerPort: 9000
         imagePullPolicy: Never
+
 ---
+
+# the service is used to communicate with the outside world. we only need the dashboard to "see" something
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -57,7 +95,7 @@ metadata:
     app: dashboard-service
 spec:
   selector:
-    app: dashboard
+    app: dashboard-dotnet
   ports:
   - protocol: TCP
     port: 9000

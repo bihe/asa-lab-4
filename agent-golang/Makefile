@@ -15,7 +15,7 @@ all: help
 
 run: ## agent invocation
 	@echo "  >  Start the agent and publish message ..."
-	dapr run --app-id agent --components-path ~/.dapr/components -- go run main.go
+	dapr run --app-id agent-golang --components-path ~/.dapr/components -- go run main.go
 
 
 # internal tasks

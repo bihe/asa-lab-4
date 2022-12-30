@@ -9,7 +9,7 @@ WHITE  := $(shell tput -Txterm setaf 7)
 CYAN   := $(shell tput -Txterm setaf 6)
 RESET  := $(shell tput -Txterm sgr0)
 
-.PHONY: all agent-cli dashboard-cli build-container build-container-arm check-run-dashboard kube-deploy-pubsub kube-deploy-components kube-undeploy
+.PHONY: all agent-cli dashboard-cli showarch build-container docker-run-dashboard kube-deploy-all kube-undeploy-all
 
 ## set the default architecture should work for most Linux systems
 golang_arch := 'amd64'
@@ -28,12 +28,12 @@ endif
 all: help
 
 agent-cli: ## run agent via dapr-cli
-	@echo "  >  Run the agent via dapr-cli ..."
-	dapr run --app-id agent --components-path ~/.dapr/components -- go run ./agent/main.go
+	@echo "  >  Run the golang agent via dapr-cli ..."
+	dapr run --app-id agent-golang --components-path ~/.dapr/components -- go run ./agent-golang/main.go
 
 dashboard-cli: ## run dashboard via dapr-cli
-	@echo "  >  Run the dashboard via dapr-cli ..."
-	dapr run --app-id dashboard --app-port 9000 --components-path ~/.dapr/components -- dotnet run --project ./dashboard/dashboard.csproj
+	@echo "  >  Run the dashboard-dotnet via dapr-cli ..."
+	dapr run --app-id dashboard-dotnet --app-port 9000 --components-path ~/.dapr/components -- dotnet run --project ./dashboard-dotnet/dashboard.csproj
 
 showarch: ## show processor architecture and the values used for the container build
 	echo 'The system is using the architecture:         --> $(UNAME_M)'
@@ -43,24 +43,27 @@ showarch: ## show processor architecture and the values used for the container b
 build-container: ## build the container-images
 	@echo "  >  Building the container-image"
 	@eval $$(minikube docker-env) ;\
-	docker build --build-arg golang_arch=$(golang_arch) -t dapr-demo/agent ./agent
+	docker build -t dapr-demo/agent-python ./agent-python
 	@eval $$(minikube docker-env) ;\
-	docker build --build-arg dotnet_runtime_arch=$(dotnet_runtime_arch) -t dapr-demo/dashboard ./dashboard
+	docker build --build-arg golang_arch=$(golang_arch) -t dapr-demo/agent-golang ./agent-golang
+	@eval $$(minikube docker-env) ;\
+	docker build --build-arg dotnet_runtime_arch=$(dotnet_runtime_arch) -t dapr-demo/dashboard-dotnet ./dashboard-dotnet
 
 docker-run-dashboard: ## run the container-image for the dashboard to check if the build works
-	@echo "  >  Starting the container-image for the dashboard"
+	@echo "  >  Starting the container-image for the dashboard-dotnet"
 	@eval $$(minikube docker-env) ;\
-	docker run -it -p 9000:9000 dapr-demo/dashboard
+	docker run -it -p 9000:9000 dapr-demo/dashboard-dotnet
 
-kube-deploy-all: ## deploy dapr pubsub (redis) and components (agent, dashboard)
+kube-deploy-all: ## deploy dapr pubsub (redis) and components (agent-golang, dashboard-dotnet)
 	@echo " >  Deploy dapr pubsub (redis)"
 	kubectl apply -f ./deployment/pubsub.yaml
 	kubectl apply -f ./deployment/components.yaml
 
 kube-undeploy-all: ## remove the k8s components for a fresh start
 	@echo " >  Undeploy components for a fresh start"
-	kubectl delete deployment agent
-	kubectl delete deployment dashboard
+	kubectl delete deployment agent-golang
+	kubectl delete deployment agent-python
+	kubectl delete deployment dashboard-dotnet
 	kubectl delete service dashboard-service
 	kubectl delete component pubsub
 

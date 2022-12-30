@@ -1,6 +1,6 @@
 .vscode/
-agent/.vscode/
-dashboard/.vscodde/
-dashboard/bin/
-dashboard/obj/
+agent-golang/.vscode/
+dashboard-dotnet/.vscodde/
+dashboard-dotnet/bin/
+dashboard-dotnet/obj/
 .git/

@@ -14,8 +14,8 @@ RESET  := $(shell tput -Txterm sgr0)
 all: help
 
 run: ## run the dashboard
-	@echo "  >  Start the dashboard to receive messages ..."
-	dapr run --app-id dashboard --app-port 9000 --components-path ~/.dapr/components -- dotnet run
+	@echo "  >  Start the dashboard-dotnet to receive messages ..."
+	dapr run --app-id dashboard-dotnet --app-port 9000 --components-path ~/.dapr/components -- dotnet run
 
 
 # internal tasks

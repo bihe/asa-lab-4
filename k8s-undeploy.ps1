@@ -1,4 +1,4 @@
-kubectl delete deployment agent
-kubectl delete deployment dashboard
+kubectl delete deployment agent-golang
+kubectl delete deployment dashboard-dotnet
 kubectl delete service dashboard-service
 kubectl delete component pubsub

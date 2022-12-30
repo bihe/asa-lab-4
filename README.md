@@ -271,12 +271,12 @@ To deploy the logic as containers to k8s/minikube another yaml definition is nee
 ```yaml
 annotations:
     dapr.io/enabled: "true"
-    dapr.io/app-id: "dashboard"
+    dapr.io/app-id: "dashboard-dotnet"
     dapr.io/app-port: "9000"
 spec:
     containers:
-    - name: dashboard
-      image: dapr-demo/dashboard:latest
+    - name: dashboard-dotnet
+      image: dapr-demo/dashboard-dotnet:latest
       ports:
       - containerPort: 9000
       imagePullPolicy: Never
@@ -298,17 +298,17 @@ The logs on the containers within the pods (stdout) can be shown via kubectl:
 
 ```bash
 # show the agent output
-kubectl logs -f --selector app=agent -c agent
+kubectl logs -f --selector app=agent-golang -c agent-golang
 
 # show the output of the dashboard
-kubectl logs -f --selector app=dashboard -c dashboard
+kubectl logs -f --selector app=dashboard-dotnet -c dashboard-dotnet
 ```
 
 The `selector` and/or `container` need to be specified, because of the dapr [sidecar pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/sidecar). The deployed pod contains two containers. The application container and the dapr sidecar.
 
 ```bash
-> kubectl logs -f dashboard-<random>-<id>
-error: a container name must be specified for pod dashboard-<random>-<id>, choose one of: [dashboard daprd]
+> kubectl logs -f dashboard-dotnet-<random>-<id>
+error: a container name must be specified for pod dashboard-dotnet-<random>-<id>, choose one of: [dashboard-dotnet daprd]
 ```
 
 The log-output of the dapr sidecar can also be shown:

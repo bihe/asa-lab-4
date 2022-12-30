@@ -8,15 +8,19 @@ const colors = [
     'alert alert-info',
     'alert alert-warning',
     'alert alert-success',
-    'alert alert-primary',
-    'alert alert-secondary',
     'alert alert-danger',
-    'alert alert-light',
-    'alert alert-dark'
+    'alert alert-primary',
+    'alert alert-dark',
+    'alert alert-secondary',
+    'alert alert-light'
 ];
 var hostNames = {};
 var lastIndex = 0;
 
+// ok, this is absolutely not necessary but I like it ;)
+const tagGolang = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/golang.svg" alt="agent-golang"/></div>';
+const tagPyhton = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/python.svg" alt="agent-python"/></div>'
+const tagAgent = '<div style="position: absolute;right: 0px;top: -20px;"><img src="/img/agent.svg" alt="agent-generic" width="40px" height="40px"/></div>'
 
 
 connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
@@ -35,6 +39,15 @@ connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
     message.setAttribute('class', color);
     message.setAttribute('role', 'alert');
     message.innerHTML = `🏠 <strong>${host}</strong> (Mac: <span style="color:green">${mac}</span>)<span class="float-end">[${tstamp}]</span><br/><span class="vr">&nbsp;${value}</span>`;
+
+    if (host.includes('golang')) {
+        message.innerHTML += tagGolang;
+    } else if (host.includes('python')) {
+        message.innerHTML += tagPyhton;
+    }
+    else {
+        message.innerHTML += tagAgent;
+    }
 
     const content = document.getElementById('content');
     content.appendChild(message);
