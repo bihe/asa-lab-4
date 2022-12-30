@@ -260,10 +260,6 @@ pubsub   2d23h
 eval $(minikube docker-env)
 make build-container
 
-## note for M1 Mac Users
-## the Makefile provides a target which sets the correct architecture for M1 Macs
-make build-container-arm
-
 # windows
 ## set docker-env variables to "redirect" the images towards minikube
 minikube docker-env --shell powershell | Invoke-Expression
@@ -292,7 +288,7 @@ The `app-port` and `containerPort` are kind of used twice, just ensure that the 
 kubectl apply -f ./deployment/components.yaml
 
 # unix-like
-make kube-deploy-components
+make kube-deploy-all
 
 # windows
 .\k8s-deploy-components.ps1
@@ -350,13 +346,11 @@ spec:
 
 The service definition exposes a TCP port which binds/forwars to the node and port of the container. This is necessary to access the system and the logic within the container from the "outside".
 
-Minikube has a speciality, that additional work is needed to access services, because no "public IP" is created with minikube (this is different with other k8s implementations). But there is an easy way to access the service - minikube has a `tunnel` command which establishes a tunnel to the exposed service. In fact it creates a tunnel to the LoadBalancer where services are exposed (https://minikube.sigs.k8s.io/docs/commands/tunnel/)
+Minikube has a specialty, that additional work is needed to access services, because no "public IP" is created with minikube (this is different with other k8s implementations). But there is an easy way to access the service - minikube has a `service` command which establishes a connection to the exposed service. In fact it creates a ip-mapping to the LoadBalancer where services are exposed (https://minikube.sigs.k8s.io/docs/commands/service/)
 
 ```bash
-minikube tunnel
+minikube service dashboard-service
 ```
-
-The terminal-window with the `tunnel` command needs to stay opened, this enables access to the defined port on **localhost**. So if a browser-window is opened (http://localhost:9000) the dashboard HTML/SignalR UI is displayed.
 
 ![k8s deployment works](./.images/k8s_deployment.png)
 
@@ -401,7 +395,7 @@ minikube docker-env --shell powershell | Invoke-Expression
 
 ## Cleanup
 
-By executing the powershell script `k8s-undeploy.ps1` or `make kube-undeploy` the resources are removed from k8s and a fresh start can be done.
+By executing the powershell script `k8s-undeploy.ps1` or `make kube-undeploy-all` the resources are removed from k8s and a fresh start can be done.
 
 This can be verified by checking the pods:
 
