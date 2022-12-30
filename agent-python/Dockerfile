@@ -1,26 +1,35 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim as base
 
-WORKDIR /opt/agent
+# ---- compile image -----------------------------------------------
+FROM base AS compile-image
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  build-essential \
+  gcc
 
-RUN apk add --update --no-cache \
-    gcc \
-    linux-headers \
-    make \
-    musl-dev \
-    g++
+RUN python -m venv /app/env
+ENV PATH="/app/env/bin:$PATH"
 
-RUN mkdir -p /opt/agent
-COPY requirements.txt /opt/agent
-COPY agent.py /opt/agent
+COPY requirements.txt .
+RUN pip install --upgrade pip
+# pip install is fast here (while slow without the venv) :
+RUN pip install -r requirements.txt
 
-RUN pip3 install --no-cache-dir -r requirements.txt
+# ---- build image -----------------------------------------------
+FROM base AS build-image
+COPY --from=compile-image /app/env /app/env
+
+# Make sure we use the virtualenv:
+ENV PATH="/app/env/bin:$PATH"
+COPY . /app
+WORKDIR /app
 
 # Do not run as root user
 ## alpine specific user/group creation
-RUN addgroup -g 1000 -S agent && \
-    adduser -u 1000 -S agent -G agent
+RUN addgroup --gid 1000  agent && \
+    adduser --system --uid 1000 --gid 1000 --no-create-home agent
 
-RUN chown -R agent:agent /opt/agent
+RUN chown -R agent:agent /app
 USER agent
 
-CMD [ "python", "/opt/agent/agent.py" ]
+CMD [ "python", "/app/agent.py" ]
