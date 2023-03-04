@@ -65,7 +65,7 @@ func main() {
 			Val:    randString(16),
 		}
 
-		// the payload is marahaled to JSON
+		// the payload is serialized to JSON
 		payload, err := json.Marshal(notify)
 		if err != nil {
 			log.Fatal(err.Error())
