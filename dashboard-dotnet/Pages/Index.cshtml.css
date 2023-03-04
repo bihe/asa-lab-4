@@ -1,0 +1,13 @@
+.scrollToView {
+    position: absolute;
+    bottom: 17px;
+    right: 15px;
+    z-index: 99;
+}
+
+.testMessage {
+    position: absolute;
+    top: 13px;
+    right: 15px;
+    z-index: 99;
+}

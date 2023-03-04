@@ -20,8 +20,10 @@ var lastIndex = 0;
 // ok, this is absolutely not necessary but I like it ;)
 const tagGolang = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/golang.svg" alt="agent-golang"/></div>';
 const tagPyhton = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/python.svg" alt="agent-python"/></div>'
-const tagAgent = '<div style="position: absolute;right: 0px;top: -20px;"><img src="/img/agent.svg" alt="agent-generic" width="40px" height="40px"/></div>'
+const tagAgent = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/agent.svg" alt="agent-generic" width="40px" height="40px"/></div>'
 
+// when set to true automatically scroll to new messages
+var scrollToView = true;
 
 connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
     if (!(host in hostNames)) {
@@ -52,7 +54,9 @@ connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
     const content = document.getElementById('content');
     content.appendChild(message);
 
-    message.scrollIntoView(); // scroll to it to show it ;)
+    if (scrollToView === true) {
+        message.scrollIntoView(); // scroll to it to show it ;)
+    }
 });
 
 connection.start().then(function () {
@@ -61,11 +65,13 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-// document.getElementById('sendButton').addEventListener('click', function (event) {
-//     var user = document.getElementById('userInput').value;
-//     var message = document.getElementById('messageInput').value;
-//     connection.invoke('SendMessage', user, message).catch(function (err) {
-//         return console.error(err.toString());
-//     });
-//     event.preventDefault();
-// });
+document.getElementById('scrollToView').addEventListener('change', function (event) {
+    // toggle the scroll-to-view setting
+    var scroll = document.querySelector('#scrollToView').checked;
+    console.log('scroll: ' + scroll);
+    scrollToView = scroll;
+});
+
+document.getElementById('btnTestMessage').addEventListener('click', function (event) {
+    fetch('/dashboard/random/Agent-Smith')
+});
