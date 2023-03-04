@@ -1,14 +1,22 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Dashboard";
 }
 
 <div class="container">
+    <div class="scrollToView">
+        <input type="checkbox" id="scrollToView" checked="true"/>
+        <label for="scrollToView">Scroll to new content</label>
+    </div>
+    <div class="testMessage">
+        <button id="btnTestMessage">debug :: send message</button>
+    </div>
     <div class="row">
         <div class="col-12" id="content">
         </div>
     </div>
+</div>
 
 <script src="~/js/signalr/signalr.min.js"></script>
 <script src="~/js/notification.js"></script>
