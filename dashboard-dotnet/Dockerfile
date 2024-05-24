@@ -12,7 +12,7 @@ RUN dotnet publish -c Release --self-contained --runtime ${runtime_arch} -o ./di
 
 ## runtime
 ## --------------------------------------------------------------------------
-FROM alpine:latest
+FROM alpine:3.18
 
 # additonal packages necessary during runtime
 # ---------------------------------------------------------------------------
