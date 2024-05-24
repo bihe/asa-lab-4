@@ -1,6 +1,6 @@
 ## build-phase
 ## --------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-env
 
 ARG dotnet_runtime_arch=alpine-x64
 ENV runtime_arch=${dotnet_runtime_arch}

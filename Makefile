@@ -17,11 +17,11 @@ dotnet_runtime_arch := 'alpine-x64'
 
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M), x86_64)
-	dotnet_runtime_arch = 'alpine-x64'
+	dotnet_runtime_arch = 'linux-musl-x64'
 	golang_arch = 'amd64'
 endif
 ifeq ($(UNAME_M), arm64)
-	dotnet_runtime_arch = 'alpine-arm64'
+	dotnet_runtime_arch = 'linux-musl-arm64'
 	golang_arch = 'arm64'
 endif
 
