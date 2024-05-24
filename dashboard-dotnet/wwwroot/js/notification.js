@@ -22,8 +22,9 @@ const tagGolang = '<div style="position: absolute;left: -30px;top: 13px;"><img s
 const tagPyhton = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/python.svg" alt="agent-python"/></div>'
 const tagAgent = '<div style="position: absolute;left: -30px;top: 13px;"><img src="/img/agent.svg" alt="agent-generic" width="40px" height="40px"/></div>'
 
-// when set to true automatically scroll to new messages
-var scrollToView = true;
+document.getElementById('btnTestMessage').addEventListener('click', function (event) {
+    fetch('/dashboard/random/Agent-Smith')
+});
 
 connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
     if (!(host in hostNames)) {
@@ -52,11 +53,7 @@ connection.on('ReceiveNotification', function (host, mac, tstamp, value) {
     }
 
     const content = document.getElementById('content');
-    content.appendChild(message);
-
-    if (scrollToView === true) {
-        message.scrollIntoView(); // scroll to it to show it ;)
-    }
+    content.prepend(message);
 });
 
 connection.start().then(function () {
@@ -65,13 +62,4 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-document.getElementById('scrollToView').addEventListener('change', function (event) {
-    // toggle the scroll-to-view setting
-    var scroll = document.querySelector('#scrollToView').checked;
-    console.log('scroll: ' + scroll);
-    scrollToView = scroll;
-});
 
-document.getElementById('btnTestMessage').addEventListener('click', function (event) {
-    fetch('/dashboard/random/Agent-Smith')
-});
