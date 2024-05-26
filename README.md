@@ -205,7 +205,7 @@ helm repo update
 helm install redis bitnami/redis
 ```
 
-Once the commands executed successfully check the relevant pods are running (be patinent, this takes a couple of seconds. The result is the main noder and 3 replicas.):
+Once the commands executed successfully check the relevant pods are running (be patient, this takes a couple of seconds. The result is the main noder and 3 replicas.):
 
 ```bash
 > kubectl get pods
