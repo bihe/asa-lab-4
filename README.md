@@ -30,15 +30,12 @@ The following components are optional, are only needed if the example is run via
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-**NOTE**: Windows users should use a package manager to simplify installation. Scoop or Chocolaty are excellent choices.
+**NOTE**: Windows users should use a **package manager**  to simplify installation. [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) / [Scoop](https://scoop.sh/) / [Chocolaty](https://chocolatey.org/) are excellent choices.
 
-```bash
-## install scoop
-irm get.scoop.sh | iex
-```
 
 # dapr cli
-The installation is straight-forward, just follow the instructions mentioned above.
+This section is **only needed** if you have the local sdks installed and want to build/run dapr without kubernetes.
+To start, the installation is straight-forward, just follow the instructions mentioned above.
 
 0. Dapr init
 
@@ -50,10 +47,10 @@ The first step is to initialize dapr. As a result dapr itself and the correspond
 # kick-start dapr
 dapr init
 
-# check the version
+# check the version (as of May 2024)
 dapr --version
-CLI version: 1.7.1
-Runtime version: 1.7.3
+CLI version: 1.13.0
+Runtime version: 1.13.3
 ```
 
 With this output the `dapr-cli` setup is done.
@@ -96,6 +93,7 @@ The output will be similar to this:
 
 # dapr on k8s (no local development SDKs needed)
 
+Kubernetes is also called `k8s` => starting with `k`, `8 characters` and ending with `s`.
 The easiest way to work with kubernetes/k8s is to locally install minikube, a single-node kubernetes "cluster". The installation is again rather simple and can be easily performed on Windows, Mac, Linux.
 
 1. minikube
@@ -105,25 +103,29 @@ Install minikube according to documentation: https://minikube.sigs.k8s.io/docs/s
 Afterwards startup minikube. The output will be similar to the one shown below:
 
 ```bash
+# versions as of May 2024
 > minikube start
 
-😄  minikube v1.25.2 on Darwin 12.4 (arm64)
+😄  minikube v1.33.1 on Darwin 14.5 (arm64)
 ✨  Using the docker driver based on existing profile
-👍  Starting control plane node minikube in cluster minikube
-🚜  Pulling base image ...
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.44 ...
 🔄  Restarting existing docker container for "minikube" ...
-🐳  Preparing Kubernetes v1.23.3 on Docker 20.10.12 ...
-    ▪ kubelet.housekeeping-interval=5m
+🐳  Preparing Kubernetes v1.30.0 on Docker 26.1.1 ...
 🔎  Verifying Kubernetes components...
-    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
-    ▪ Using image kubernetesui/dashboard:v2.3.1
-    ▪ Using image kubernetesui/metrics-scraper:v1.0.7
 💡  After the addon is enabled, please run "minikube tunnel" and your ingress resources would be available at "127.0.0.1"
-    ▪ Using image k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1
-    ▪ Using image k8s.gcr.io/ingress-nginx/controller:v1.1.1
-    ▪ Using image k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image registry.k8s.io/ingress-nginx/controller:v1.10.1
+    ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.1
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+    ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.1
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
+
+	minikube addons enable metrics-server
+
 🔎  Verifying ingress addon...
-🌟  Enabled addons: storage-provisioner, default-storageclass, dashboard, ingress
+🌟  Enabled addons: storage-provisioner, dashboard, default-storageclass, ingress
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ```
 
@@ -133,8 +135,16 @@ To work with k8s/minikube `kubectl` is needed. Minikube provides a kubectl `mini
 # Mac
 brew install kubectl
 
-# Windows
+# Windows has a couple of package manager
+
+# using winget
+winget install -e --id Kubernetes.kubectl
+
+# using scoop
 scoop install kubectl
+
+# using chocolatey
+choco install kubernetes-cli
 ```
 
 This is optional, because the minikube-provided kubectl can also be used, or aliased to "feel" like a standalone kubectl (https://minikube.sigs.k8s.io/docs/handbook/kubectl/).
@@ -150,9 +160,10 @@ minikube addons enable dashboard
 minikube addons enable ingress
 ```
 
-The finial step to initialize dapr on k8s is done via the `dapr-cli`.
+The finial step to initialize dapr on kubernetes (k8s) / minikube is done via the `dapr-cli`.
 
 ```bash
+# the command initializes dapr on kubernetes by provisioning a couple of containers
 dapr init -k
 ```
 
@@ -164,6 +175,7 @@ A pubsub component is needed on k8s/minikube for this example. The easiest way i
 
 3.1 Install helm-cli
 
+We use `helm` because it simplifies the installation process of components to kubernetes.
 The helm-documentation lists a number of options how to install helm for different operating-systems: https://helm.sh/docs/intro/install/
 Again the easiest way is to use a package manager:
 
@@ -171,13 +183,21 @@ Again the easiest way is to use a package manager:
 # Mac
 brew install helm
 
-# Windows
+# Windows has a couple of package manager
+
+# using winget
+winget install Helm.Helm
+
+# using scoop
 scoop install helm
+
+# using chocolatey
+choco install kubernetes-helm
 ```
 
 3.2 Install redis
 
-To install redis on k8s/minikube we use helm (=the kubernetes package manager). This is similar to `apt` for Debian-based Linux systems (https://wiki.debian.org/AptCLI)
+To install redis on `k8s/minikube` we use **helm** (=the kubernetes package manager). This is similar to `apt` for Debian-based Linux systems (https://wiki.debian.org/AptCLI)
 
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -185,7 +205,7 @@ helm repo update
 helm install redis bitnami/redis
 ```
 
-Once the commands executed successfully check the relevant pods are running:
+Once the commands executed successfully check the relevant pods are running (be patinent, this takes a couple of seconds. The result is the main noder and 3 replicas.):
 
 ```bash
 > kubectl get pods
@@ -198,7 +218,7 @@ redis-replicas-2   1/1     Running   2 (34m ago)   2d23h
 
 3.3 dapr pubsub component
 
-The last step is to "introduce" the pubsub dapr component to k8s. The definition of the component is stored in `deployment/pubsub.yaml`
+The last step is to "introduce" the pubsub dapr component to k8s. Redis has an extension `Redis Streams` which we use for [publish-subscribe](https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-redis-pubsub/). The definition of the component is stored in `deployment/pubsub.yaml`.
 
 ```yaml
 apiVersion: dapr.io/v1alpha1
@@ -222,19 +242,19 @@ spec:
 
 ```
 
-This "typical" yaml structure is the applied via `kubectl` using the following command:
+Kubernetes uses a lot of yaml, someone working with kubernetes is sometimes called a "**YAML Engineer**". This yaml structure is applied via `kubectl` using the following command:
 
 ```bash
 kubectl apply -f ./deployment/pubsub.yaml
 ```
 
-Again this can be done by using the Makefile:
+Again this can be done by using the `Makefile`:
 
 ```bash
 make kube-deploy-pubsub
 ```
 
-Or for the Windows-people by using the following powershell script:
+Or for the `Windows` by using the following powershell script:
 
 ```bash
 .\k8s-deploy-pubsub.ps1
@@ -269,6 +289,8 @@ minikube docker-env --shell powershell | Invoke-Expression
 To deploy the logic as containers to k8s/minikube another yaml definition is needed. The yaml files creates deployments for two pods and a service to access the dashboard (via ingress). The syntax is typical k8s-yaml (https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/) with some dapr-extensions:
 
 ```yaml
+# example and parts of the components yaml file
+...
 annotations:
     dapr.io/enabled: "true"
     dapr.io/app-id: "dashboard-dotnet"
@@ -280,6 +302,7 @@ spec:
       ports:
       - containerPort: 9000
       imagePullPolicy: Never
+...
 ```
 
 The `app-port` and `containerPort` are kind of used twice, just ensure that the same ports are used. The deployment file is available at: `deployment/components.yaml` and is applied via
@@ -294,7 +317,7 @@ make kube-deploy-all
 .\k8s-deploy-components.ps1
 ```
 
-The logs on the containers within the pods (stdout) can be shown via kubectl:
+The logs of the containers within the pods (stdout) can be shown via kubectl:
 
 ```bash
 # show the agent output
@@ -328,6 +351,7 @@ time="2022-06-02T17:01:19.962380871Z" level=info msg="app id: dashboard" app_id=
 To access the dashboard a k8s service is defined:
 
 ```yaml
+...
 apiVersion: v1
 kind: Service
 metadata:
@@ -342,9 +366,10 @@ spec:
     port: 9000
     targetPort: 9000
   type: LoadBalancer
+  ...
 ```
 
-The service definition exposes a TCP port which binds/forwars to the node and port of the container. This is necessary to access the system and the logic within the container from the "outside".
+The service definition **exposes a TCP port** which binds/forwars to the node and port of the container. This is necessary to access the system and the logic within the container from the "outside".
 
 Minikube has a specialty, that additional work is needed to access services, because no "public IP" is created with minikube (this is different with other k8s implementations). But there is an easy way to access the service - minikube has a `service` command which establishes a connection to the exposed service. In fact it creates a ip-mapping to the LoadBalancer where services are exposed (https://minikube.sigs.k8s.io/docs/commands/service/)
 
