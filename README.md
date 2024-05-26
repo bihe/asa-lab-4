@@ -129,7 +129,7 @@ Afterwards startup minikube. The output will be similar to the one shown below:
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ```
 
-To work with k8s/minikube `kubectl` is needed. Minikube provides a kubectl `minikube kubectl -- <kubectl commands>`. In addition it is possible to install a plain kubectl. This can be done by typical packages managers. For Windows [scoop](https://scoop.sh/) is quite nice (or winget for newer Windows versions).
+To work with k8s/minikube `kubectl` is needed. Minikube provides a kubectl `minikube kubectl -- <kubectl commands>`. In addition it is possible to install a plain kubectl. This can be done by typical packages managers.
 
 ```bash
 # Mac
@@ -156,8 +156,8 @@ The process is again quite easy. More information is available on the dapr websi
 The following additional components are installed on minikube:
 
 ```bash
-minikube addons enable dashboard
-minikube addons enable ingress
+minikube addons enable dashboard # provides a kubernetes dashboard
+minikube addons enable ingress # provides a reverse proxy using nginx to expose services
 ```
 
 The finial step to initialize dapr on kubernetes (k8s) / minikube is done via the `dapr-cli`.
