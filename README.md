@@ -17,20 +17,24 @@ The following components are necessary to run the example.
 - Container runtime (Docker): https://www.docker.com/get-started/
 - Portable, event-driven runtime (dapr): https://docs.dapr.io/getting-started/install-dapr-cli/
 - Single node k8s (minikube): https://minikube.sigs.k8s.io/docs/start/
+- Kubernetes package manager (helm): https://helm.sh/
 
-
-The following components are optional, are only needed if the example is run via `apr-cli`.
+If you want to build/run the examples using `apr-cli` the following sdks are needed.
 
 - The programming language with the nice mascot **golang**: https://go.dev/dl/
 - The versatile technology from Microsoft **.NET**: https://dotnet.microsoft.com/en-us/download
+- The ubiquitous scripting langauge **python**: https://www.python.org/
 
-**NOTE**: For windows users it is quite helpful to set the execution-policy for powershell:
+## Windows Notes
+To execute the commands a decent shell/terminal is needed. In a Unix-like environment like Mac/Linux typically a good shell is available out of the box (bash, zsh) in combination with a terminal (terminal, iTerm, Konsole, gnome-terminal, ...). For **Windows** a good combination of shell/terminal is [PowerShell](https://github.com/PowerShell/PowerShell)/[Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/). The commands below either work directly in PowerShell or there is a variant for PowerShell displayed. If you use [cmd.exe](https://en.wikipedia.org/wiki/Cmd.exe), you are without help. Nobody shoul use this old command-interpreter any more!
+
+**Powershell**: For windows users it is quite helpful to set the execution-policy for powershell:
 
 ```bash
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-**NOTE**: Windows users should use a **package manager**  to simplify installation. [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) / [Scoop](https://scoop.sh/) / [Chocolaty](https://chocolatey.org/) are excellent choices.
+**Package Managers**: Windows users should use a **package manager**  to simplify installation. [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) / [Scoop](https://scoop.sh/) / [Chocolaty](https://chocolatey.org/) are excellent choices.
 
 
 # dapr cli
